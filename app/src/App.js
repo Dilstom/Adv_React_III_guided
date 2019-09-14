@@ -2,9 +2,41 @@ import React, { useState } from 'react';
 // import DynamicTitle from './DynamicTitle';
 import './App.css';
 
+// const useInput = (key, initialValue) => {
+//  const [inputValue, setInputValue] = useLocalStorage(key, initialValue);
+
+//  const handleChange = updatedValue => {
+//   setInputValue(updatedValue);
+//  };
+
+//  return [inputValue, handleChange];
+// };
+
+// ************************************************
+const useLocalStorage = (key, val) => {
+ const [storedVal, setStoredVal] = useState(() => {
+  const item = localStorage.getItem(key);
+  return item ? JSON.parse(item) : val;
+ });
+
+ const setValue = value => {
+  localStorage.setItem(key, JSON.stringify(value));
+  setStoredVal(value);
+ };
+
+ return [storedVal, setValue];
+};
+// ************************************************
+
 function App() {
  const [password, setPassword] = useState('');
  const [isValid, setIsValid] = useState(false);
+
+ // ************************************************
+ const [usernameTwo, setUsernameTwo] = useLocalStorage('usernameTwo', '');
+ const [passwordTwo, setPasswordTwo] = useLocalStorage('passwordTwo', '');
+ // ************************************************
+
  //  const passValidatorArray = usePasswordValidator();
  const validatePass = pass => {
   if (pass.length > 7) {
@@ -31,6 +63,20 @@ function App() {
     />
     {isValid ? <h3>Password is Valid</h3> : <h3>Password is Invalid</h3>}
    </form>
+   ************************************************
+   <form>
+    <input
+     placeholder="Username"
+     value={usernameTwo}
+     onChange={e => setUsernameTwo(e.target.value)}
+    />
+    <input
+     placeholder="Password"
+     value={passwordTwo}
+     onChange={e => setPasswordTwo(e.target.value)}
+    />
+   </form>
+   ************************************************
   </div>
  );
 }
